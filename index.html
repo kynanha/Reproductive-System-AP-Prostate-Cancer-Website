@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Prostate Cancer — When Your Cells Turn Against You</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════════
+   ROOT VARIABLES & RESET
+═══════════════════════════════════ */
+:root {
+  --bg:       #0d1b2a;
+  --bg2:      #112031;
+  --bg3:      #162840;
+  --card:     rgba(255,255,255,0.06);
+  --border:   rgba(255,255,255,0.10);
+  --yellow:   #FFD166;
+  --orange:   #FF6B35;
+  --red:      #EF233C;
+  --teal:     #06D6A0;
+  --blue:     #118AB2;
+  --purple:   #9B5DE5;
+  --pink:     #F15BB5;
+  --white:    #F0F4FF;
+  --muted:    rgba(240,244,255,0.55);
+  --font-h:   'Nunito', sans-serif;
+  --font-b:   'Nunito Sans', sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-b);
+  background: var(--bg);
+  color: var(--white);
+  overflow-x: hidden;
+  line-height: 1.65;
+}
+img { display: block; max-width: 100%; }
+ul { list-style: none; }
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-thumb { background: var(--yellow); border-radius: 99px; }
+
+/* ═══════════════════════════════════
+   PROGRESS BAR
+═══════════════════════════════════ */
+#prog {
+  position: fixed; top:0; left:0; height:4px; width:0%;
+  background: linear-gradient(90deg, var(--yellow), var(--orange), var(--red));
+  z-index: 9999; transition: width .1s linear;
+}
+
+/* ═══════════════════════════════════
+   NAV
+═══════════════════════════════════ */
+nav {
+  position: fixed; top:4px; left:0; right:0; z-index:999;
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 12px 40px;
+  background: rgba(13,27,42,0.82);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-title { font-family:var(--font-h); font-weight:900; font-size:1rem; color:var(--yellow); letter-spacing:.02em; }
+.nav-links { display:flex; gap:28px; }
+.nav-links a {
+  font-family:var(--font-h); font-weight:700; font-size:.82rem;
+  color:var(--muted); text-decoration:none; letter-spacing:.04em;
+  text-transform:uppercase; transition: color .2s;
+}
+.nav-links a:hover { color:var(--yellow); }
+@media(max-width:700px){ .nav-links{display:none;} nav{padding:12px 20px;} }
+
+/* ═══════════════════════════════════
+   SECTION UTILITIES
+═══════════════════════════════════ */
+section { padding: 90px 0; position: relative; }
+.container { max-width: 1100px; margin: 0 auto; padding: 0 28px; }
+.sec-label {
+  display:inline-block; font-family:var(--font-h); font-weight:800;
+  font-size:.72rem; letter-spacing:.14em; text-transform:uppercase;
+  padding:5px 14px; border-radius:99px; margin-bottom:16px;
+}
+.sec-label.y  { background:rgba(255,209,102,.18); color:var(--yellow); }
+.sec-label.o  { background:rgba(255,107,53,.18);  color:var(--orange); }
+.sec-label.r  { background:rgba(239,35,60,.18);   color:var(--red);    }
+.sec-label.t  { background:rgba(6,214,160,.18);   color:var(--teal);   }
+.sec-label.p  { background:rgba(155,93,229,.18);  color:var(--purple); }
+h2.sec-title {
+  font-family:var(--font-h); font-weight:900; font-size:clamp(1.8rem,4vw,2.8rem);
+  line-height:1.12; margin-bottom:14px;
+  text-shadow:
+    0 1px 0 rgba(255,255,255,.22),
+    0 2px 0 rgba(0,0,0,.35),
+    0 4px 0 rgba(0,0,0,.28),
+    0 8px 22px rgba(0,0,0,.55);
+  transform:perspective(700px) rotateX(9deg);
+  transform-origin:bottom center;
+}
+.sec-sub { color:var(--muted); font-size:1.02rem; max-width:620px; line-height:1.7; margin-bottom:36px; }
+
+/* 3D floating / rotating elements */
+@keyframes spin3d {
+  0%   { transform:perspective(800px) rotateY(0deg)   rotateX(6deg)  translateY(0); }
+  50%  { transform:perspective(800px) rotateY(180deg) rotateX(-6deg) translateY(-14px); }
+  100% { transform:perspective(800px) rotateY(360deg) rotateX(6deg)  translateY(0); }
+}
+@keyframes tilt3d {
+  0%,100% { transform:perspective(900px) rotateY(-12deg) rotateX(6deg); }
+  50%     { transform:perspective(900px) rotateY(12deg)  rotateX(-4deg); }
+}
+.spin-3d { animation:spin3d 16s linear infinite; will-change:transform; }
+.tilt-3d { animation:tilt3d 9s ease-in-out infinite; will-change:transform; }
+.art-3d {
+  display:block; width:100%; max-width:520px; margin:0 auto;
+  filter:drop-shadow(0 26px 40px rgba(0,0,0,.55));
+}
+.art-wrap { margin:34px auto 8px; max-width:560px; text-align:center; }
+.art-cap { font-size:.8rem; color:var(--muted); margin-top:10px; }
+@media (prefers-reduced-motion: reduce) {
+  .spin-3d, .tilt-3d { animation:none; }
+}
+
+
+/* Reveal animation */
+.reveal { opacity:0; transform:translateY(36px); transition:opacity .7s cubic-bezier(.16,1,.3,1), transform .7s cubic-bezier(.16,1,.3,1); }
+.reveal.in { opacity:1; transform:none; }
+.reveal.d1 { transition-delay:.10s; }
+.reveal.d2 { transition-delay:.20s; }
+.reveal.d3 { transition-delay:.30s; }
+.reveal.d4 { transition-delay:.40s; }
+.reveal.d5 { transition-delay:.50s; }
+
+/* ═══════════════════════════════════
+   HERO
+═══════════════════════════════════ */
+#hero {
+  min-height: 100svh; display:flex; align-items:center; justify-content:center;
+  text-align:center; position:relative; overflow:hidden; padding-top:80px;
+}
+#cell-canvas { position:absolute; inset:0; width:100%; height:100%; z-index:0; }
+.hero-overlay {
+  position:absolute; inset:0; z-index:1;
+  background: radial-gradient(ellipse 75% 65% at 50% 55%, rgba(13,27,42,0) 0%, rgba(13,27,42,.88) 75%, rgba(13,27,42,1) 100%);
+}
+.hero-content { position:relative; z-index:2; max-width:820px; padding:20px; perspective:900px; }
+.hero-byline { margin:-18px auto 20px; font-family:var(--font-h); font-size:.86rem; font-weight:800; letter-spacing:.06em; color:var(--white); }
+.hero-byline span { color:var(--yellow); }
+.hero-orbit { position:absolute; z-index:1; width:120px; height:120px; border:2px solid rgba(6,214,160,.32); border-radius:50%; transform-style:preserve-3d; animation:orbit3d 11s linear infinite; pointer-events:none; }
+.hero-orbit::before,.hero-orbit::after { content:""; position:absolute; inset:15px; border:2px solid rgba(255,209,102,.35); border-radius:50%; transform:rotateX(68deg); }
+.hero-orbit::after { inset:34px; background:radial-gradient(circle at 35% 30%,var(--pink),var(--purple)); border:0; box-shadow:0 12px 30px rgba(155,93,229,.3); transform:translateZ(28px); }
+.hero-orbit.one { left:7%; top:22%; } .hero-orbit.two { right:7%; bottom:18%; animation-direction:reverse; animation-duration:14s; }
+@keyframes orbit3d { from{transform:rotateX(58deg) rotateY(0deg) rotateZ(0deg)} to{transform:rotateX(58deg) rotateY(360deg) rotateZ(360deg)} }
+.habit-emoji,.prev-emoji,.sym-icon { transform-style:preserve-3d; animation:gentle3d 7s ease-in-out infinite; }
+@keyframes gentle3d { 0%,100%{transform:rotateY(-8deg) translateY(0)} 50%{transform:rotateY(16deg) translateY(-4px)} }
+@media(max-width:700px){.hero-orbit{width:76px;height:76px;opacity:.55}.hero-orbit.one{left:-20px}.hero-orbit.two{right:-20px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
+.hero-badge {
+  display:inline-flex; align-items:center; gap:8px;
+  background:rgba(255,209,102,.12); border:1.5px solid rgba(255,209,102,.3);
+  border-radius:99px; padding:6px 18px; margin-bottom:24px;
+  font-family:var(--font-h); font-weight:700; font-size:.78rem;
+  color:var(--yellow); letter-spacing:.1em; text-transform:uppercase;
+  animation: fadeSlide .9s ease both;
+}
+.hero-badge .dot { width:7px;height:7px;background:var(--yellow);border-radius:50%; animation: blink 1.6s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+
+.hero-title {
+  font-family:var(--font-h); font-weight:900;
+  font-size:clamp(2.6rem,7vw,5.2rem); line-height:1.05;
+  margin-bottom:8px; animation: fadeSlide .9s ease .15s both;
+}
+.hero-title .line2 { color:var(--yellow); display:block; }
+.hero-sub {
+  font-size:clamp(1rem,2.2vw,1.25rem); color:var(--muted);
+  max-width:560px; margin:16px auto 32px;
+  animation: fadeSlide .9s ease .28s both;
+}
+.hero-outcome {
+  background:rgba(255,255,255,.06); border:1.5px solid rgba(255,209,102,.3);
+  border-radius:16px; padding:20px 28px; max-width:640px; margin:0 auto 36px;
+  animation: fadeSlide .9s ease .4s both; text-align:left;
+}
+.hero-outcome .ol {
+  font-family:var(--font-h); font-weight:800; font-size:.7rem;
+  letter-spacing:.12em; text-transform:uppercase; color:var(--yellow); margin-bottom:8px;
+}
+.hero-outcome p { font-size:.95rem; color:var(--white); line-height:1.65; }
+.hero-cta { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; animation: fadeSlide .9s ease .52s both; }
+.btn {
+  display:inline-flex; align-items:center; gap:8px;
+  padding:13px 28px; border-radius:99px; font-family:var(--font-h);
+  font-weight:800; font-size:.9rem; cursor:pointer; border:none; text-decoration:none;
+  transition: transform .2s cubic-bezier(.34,1.56,.64,1), box-shadow .25s;
+}
+.btn:hover { transform:translateY(-3px); }
+.btn.primary { background:var(--yellow); color:#0d1b2a; box-shadow:0 0 28px rgba(255,209,102,.35); }
+.btn.primary:hover { box-shadow:0 0 50px rgba(255,209,102,.55); }
+.btn.ghost { background:transparent; color:var(--white); border:1.5px solid rgba(255,255,255,.2); }
+.btn.ghost:hover { border-color:var(--yellow); color:var(--yellow); }
+.scroll-hint {
+  position:absolute; bottom:28px; left:50%; transform:translateX(-50%);
+  z-index:2; display:flex; flex-direction:column; align-items:center; gap:6px;
+  font-size:.72rem; color:var(--muted); letter-spacing:.1em; text-transform:uppercase;
+  animation: float 3s ease-in-out infinite;
+}
+@keyframes float { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(-8px)} }
+@keyframes fadeSlide { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:none} }
+
+/* ═══════════════════════════════════
+   TICKER
+═══════════════════════════════════ */
+.ticker { overflow:hidden; background:rgba(255,209,102,.07); border-top:1px solid rgba(255,209,102,.15); border-bottom:1px solid rgba(255,209,102,.15); padding:10px 0; }
+.ticker-track { display:flex; gap:60px; white-space:nowrap; animation:tick 32s linear infinite; }
+.ticker-track:hover { animation-play-state:paused; }
+.ticker-item { display:flex; align-items:center; gap:10px; font-family:var(--font-h); font-weight:700; font-size:.82rem; color:var(--muted); flex-shrink:0; }
+.ticker-item span { width:6px;height:6px;background:var(--yellow);border-radius:50%; }
+@keyframes tick { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+/* ═══════════════════════════════════
+   SECTION: DISEASE INTRO
+═══════════════════════════════════ */
+#disease { background:var(--bg2); }
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:center; }
+@media(max-width:800px){ .two-col{grid-template-columns:1fr;gap:36px;} .two-col.rev>*:first-child{order:2;} }
+.stat-chips { display:flex; gap:16px; flex-wrap:wrap; margin-top:28px; }
+.chip {
+  display:flex; flex-direction:column; padding:16px 22px;
+  background:var(--card); border:1px solid var(--border); border-radius:14px;
+  transition:border-color .25s, transform .25s;
+}
+.chip:hover { border-color:var(--yellow); transform:translateY(-3px); }
+.chip-num { font-family:var(--font-h); font-weight:900; font-size:1.9rem; line-height:1; color:var(--yellow); }
+.chip-label { font-size:.78rem; color:var(--muted); margin-top:4px; }
+
+/* Cell SVG illustration */
+.cell-illustration { position:relative; display:flex; justify-content:center; align-items:center; }
+.cell-svg-wrap { animation: float2 5s ease-in-out infinite; }
+@keyframes float2 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
+
+/* ═══════════════════════════════════
+   SECTION: ANATOMY (Interactive)
+═══════════════════════════════════ */
+#anatomy { background:var(--bg); }
+.anatomy-wrapper { display:grid; grid-template-columns:1fr 420px; gap:48px; align-items:start; }
+@media(max-width:900px){ .anatomy-wrapper{grid-template-columns:1fr;} }
+
+.anatomy-img-box { position:relative; border-radius:20px; overflow:hidden; cursor:pointer; }
+.anatomy-img-box img { width:100%; display:block; transition:filter .3s; }
+.anatomy-img-box::after {
+  content:'👆 Click on each organ to learn more';
+  position:absolute; bottom:0; left:0; right:0;
+  padding:14px 20px; text-align:center;
+  background:linear-gradient(transparent, rgba(13,27,42,.95));
+  font-family:var(--font-h); font-weight:700; font-size:.8rem; color:var(--yellow);
+  letter-spacing:.06em;
+}
+
+/* Clickable hotspots over image */
+.hotspot-layer { position:absolute; inset:0; }
+.hotspot {
+  position:absolute; width:34px; height:34px; border-radius:50%;
+  border:2.5px solid var(--yellow); background:rgba(255,209,102,.25);
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition:transform .2s cubic-bezier(.34,1.56,.64,1), background .2s, box-shadow .2s;
+  animation: pulseHot 2.2s ease-in-out infinite;
+}
+.hotspot:hover, .hotspot.active {
+  transform:scale(1.35); background:rgba(255,209,102,.55);
+  box-shadow:0 0 0 8px rgba(255,209,102,.2); animation-play-state:paused;
+}
+@keyframes pulseHot {
+  0%,100%{box-shadow:0 0 0 0 rgba(255,209,102,.5)}
+  50%{box-shadow:0 0 0 10px rgba(255,209,102,0)}
+}
+.hotspot svg { width:14px; height:14px; fill:var(--yellow); }
+
+/* Organ detail panel */
+.organ-panel {
+  background:var(--card); border:1.5px solid var(--border);
+  border-radius:20px; padding:28px; position:sticky; top:90px;
+  min-height:320px; display:flex; flex-direction:column; gap:16px;
+}
+.organ-panel .placeholder {
+  flex:1; display:flex; flex-direction:column; align-items:center;
+  justify-content:center; gap:12px; color:var(--muted); text-align:center;
+  font-family:var(--font-h); font-weight:700;
+}
+.organ-panel .placeholder .big { font-size:3rem; }
+.organ-detail { display:none; flex-direction:column; gap:14px; }
+.organ-detail.show { display:flex; animation:panelIn .4s cubic-bezier(.16,1,.3,1); }
+@keyframes panelIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
+.organ-detail .organ-icon { font-size:2.8rem; margin-bottom:4px; }
+.organ-detail h3 { font-family:var(--font-h); font-weight:900; font-size:1.4rem; }
+.organ-detail .organ-label { font-size:.72rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--yellow); }
+.organ-detail p { font-size:.92rem; color:var(--muted); line-height:1.7; }
+.organ-detail .cancer-link {
+  background:rgba(239,35,60,.12); border:1px solid rgba(239,35,60,.3);
+  border-radius:12px; padding:12px 16px; font-size:.86rem; color:var(--red); line-height:1.6;
+}
+.organ-detail .cancer-link strong { color:var(--white); }
+
+/* ═══════════════════════════════════
+   SECTION: HABITS (Risk Factors)
+═══════════════════════════════════ */
+#habits { background:var(--bg2); }
+.habits-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:20px; }
+.habit-card {
+  background:var(--card); border:1.5px solid var(--border);
+  border-radius:18px; padding:24px 22px; display:flex; flex-direction:column; gap:12px;
+  transition:border-color .25s, transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s;
+  cursor:default;
+}
+.habit-card:hover { border-color:var(--orange); transform:translateY(-6px); box-shadow:0 12px 40px rgba(255,107,53,.15); }
+.habit-top { display:flex; align-items:center; gap:14px; }
+.habit-emoji { font-size:2.4rem; line-height:1; }
+.habit-name { font-family:var(--font-h); font-weight:800; font-size:1.05rem; }
+.habit-tag { font-size:.68rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--orange); }
+.habit-body { font-size:.88rem; color:var(--muted); line-height:1.7; }
+.risk-bar-wrap { display:flex; align-items:center; gap:10px; }
+.risk-bar { flex:1; height:6px; background:rgba(255,255,255,.1); border-radius:99px; overflow:hidden; }
+.risk-bar-fill { height:100%; border-radius:99px; background:linear-gradient(90deg,var(--orange),var(--red)); }
+.risk-label { font-size:.72rem; font-weight:700; color:var(--orange); white-space:nowrap; }
+
+/* ═══════════════════════════════════
+   SECTION: HOW IT HAPPENS (Mechanism)
+═══════════════════════════════════ */
+#mechanism { background:var(--bg); }
+.mech-steps { display:flex; gap:0; position:relative; margin-bottom:48px; }
+.mech-steps::before {
+  content:''; position:absolute; top:28px; left:28px; right:28px; height:3px;
+  background:linear-gradient(90deg,var(--teal),var(--yellow),var(--orange),var(--red));
+}
+@media(max-width:700px){ .mech-steps{flex-direction:column;} .mech-steps::before{display:none;} }
+.mech-step { flex:1; display:flex; flex-direction:column; align-items:center; gap:12px; text-align:center; position:relative; z-index:1; padding:0 8px; }
+.mech-num {
+  width:56px;height:56px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-h); font-weight:900; font-size:1.2rem;
+  background:var(--bg2); border:2.5px solid;
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+}
+.mech-step:hover .mech-num { transform:scale(1.2); }
+.mech-num.c1 { border-color:var(--teal);   color:var(--teal); }
+.mech-num.c2 { border-color:var(--yellow); color:var(--yellow); }
+.mech-num.c3 { border-color:var(--orange); color:var(--orange); }
+.mech-num.c4 { border-color:var(--red);    color:var(--red); }
+.mech-num.c5 { border-color:#ff00aa;        color:#ff00aa; }
+.mech-step h4 { font-family:var(--font-h); font-weight:800; font-size:.88rem; }
+.mech-step p { font-size:.78rem; color:var(--muted); line-height:1.55; }
+
+.mech-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+@media(max-width:800px){ .mech-cards{grid-template-columns:1fr;} }
+.mech-card {
+  background:var(--card); border:1.5px solid var(--border);
+  border-radius:16px; padding:22px 20px;
+  transition:border-color .25s, transform .25s;
+}
+.mech-card:hover { border-color:var(--purple); transform:translateY(-4px); }
+.mech-card .mi { font-size:2rem; margin-bottom:10px; }
+.mech-card h4 { font-family:var(--font-h); font-weight:800; font-size:1rem; margin-bottom:8px; color:var(--purple); }
+.mech-card p { font-size:.86rem; color:var(--muted); line-height:1.7; }
+
+/* ═══════════════════════════════════
+   SECTION: SYMPTOMS
+═══════════════════════════════════ */
+#symptoms { background:var(--bg2); }
+.sym-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:16px; }
+.sym-card {
+  display:flex; align-items:flex-start; gap:16px; padding:20px 18px;
+  background:var(--card); border:1.5px solid var(--border); border-radius:16px;
+  transition:border-color .25s, transform .2s;
+}
+.sym-card:hover { border-color:var(--red); transform:scale(1.02); }
+.sym-icon {
+  width:48px; height:48px; border-radius:12px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; font-size:1.5rem;
+  background:rgba(239,35,60,.12); border:1px solid rgba(239,35,60,.2);
+}
+.sym-card h4 { font-family:var(--font-h); font-weight:800; font-size:.95rem; color:var(--red); margin-bottom:5px; }
+.sym-card p { font-size:.83rem; color:var(--muted); line-height:1.6; }
+
+.psa-box {
+  margin-top:36px; padding:24px 28px;
+  background:linear-gradient(135deg,rgba(6,214,160,.1),rgba(17,138,178,.1));
+  border:1.5px solid rgba(6,214,160,.3); border-radius:18px;
+  display:flex; gap:20px; align-items:flex-start;
+}
+.psa-icon { font-size:2.2rem; flex-shrink:0; animation:float2 3s ease-in-out infinite; }
+.psa-box h4 { font-family:var(--font-h); font-weight:800; font-size:1.05rem; color:var(--teal); margin-bottom:6px; }
+.psa-box p { font-size:.88rem; color:var(--muted); line-height:1.7; }
+
+/* ═══════════════════════════════════
+   SECTION: PREVENTION
+═══════════════════════════════════ */
+#prevention { background:var(--bg); }
+.prev-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+@media(max-width:800px){ .prev-grid{grid-template-columns:1fr 1fr;} }
+@media(max-width:520px){ .prev-grid{grid-template-columns:1fr;} }
+.prev-card {
+  background:var(--card); border:1.5px solid var(--border);
+  border-radius:18px; padding:26px 22px; position:relative; overflow:hidden;
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1), border-color .25s, box-shadow .25s;
+}
+.prev-card::before {
+  content:''; position:absolute; top:0;left:0;right:0; height:3px;
+  background:linear-gradient(90deg,var(--teal),var(--blue));
+  opacity:0; transition:opacity .25s;
+}
+.prev-card:hover { transform:translateY(-6px); border-color:var(--teal); box-shadow:0 16px 44px rgba(6,214,160,.12); }
+.prev-card:hover::before { opacity:1; }
+.prev-num { font-family:var(--font-h); font-weight:900; font-size:3rem; line-height:1; color:var(--teal); opacity:.18; margin-bottom:10px; transition:opacity .25s; }
+.prev-card:hover .prev-num { opacity:.45; }
+.prev-emoji { font-size:2rem; margin-bottom:12px; }
+.prev-card h4 { font-family:var(--font-h); font-weight:800; font-size:1rem; color:var(--teal); margin-bottom:8px; }
+.prev-card p { font-size:.85rem; color:var(--muted); line-height:1.7; }
+
+/* ═══════════════════════════════════
+   SECTION: QUIZ
+═══════════════════════════════════ */
+#quiz { background:var(--bg2); }
+.quiz-box {
+  max-width:720px; margin:0 auto;
+  background:var(--card); border:1.5px solid var(--border);
+  border-radius:22px; padding:40px 44px;
+}
+@media(max-width:600px){ .quiz-box{padding:28px 20px;} }
+.qprog-bar { height:5px; background:rgba(255,255,255,.08); border-radius:99px; overflow:hidden; margin-bottom:28px; }
+.qprog-fill { height:100%; border-radius:99px; background:linear-gradient(90deg,var(--teal),var(--yellow)); transition:width .5s cubic-bezier(.16,1,.3,1); }
+.q-label { font-family:var(--font-h); font-weight:700; font-size:.78rem; color:var(--muted); letter-spacing:.1em; text-transform:uppercase; margin-bottom:16px; }
+.q-text { font-family:var(--font-h); font-weight:800; font-size:1.22rem; line-height:1.45; margin-bottom:26px; min-height:3.5rem; }
+.q-options { display:flex; flex-direction:column; gap:11px; margin-bottom:22px; }
+.q-opt {
+  display:flex; align-items:center; gap:14px; padding:14px 18px;
+  background:rgba(255,255,255,.04); border:1.5px solid var(--border);
+  border-radius:12px; cursor:pointer; font-family:var(--font-b); font-size:.9rem;
+  transition:border-color .15s, background .15s, transform .15s;
+  text-align:left; color:var(--white); width:100%;
+}
+.q-opt:hover:not(:disabled) { border-color:var(--teal); background:rgba(6,214,160,.08); transform:translateX(4px); }
+.q-opt.correct { border-color:var(--teal);  background:rgba(6,214,160,.14); color:var(--teal); }
+.q-opt.wrong   { border-color:var(--red);   background:rgba(239,35,60,.12); color:var(--red); }
+.q-letter {
+  width:30px;height:30px; border-radius:50%; border:1.5px solid currentColor;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-h); font-weight:800; font-size:.78rem; flex-shrink:0;
+}
+.q-fb {
+  min-height:44px; padding:12px 16px; border-radius:12px; font-size:.87rem; line-height:1.6;
+  opacity:0; transition:opacity .3s; margin-bottom:18px;
+}
+.q-fb.show { opacity:1; }
+.q-fb.ok  { background:rgba(6,214,160,.12); border:1px solid rgba(6,214,160,.3); color:var(--teal); }
+.q-fb.bad { background:rgba(239,35,60,.12);  border:1px solid rgba(239,35,60,.3);  color:#ff8080; }
+.q-fb strong { color:inherit; }
+.q-review { display:inline-block; margin-top:8px; color:var(--muted); font-size:.82rem; }
+.q-footer { display:flex; justify-content:space-between; align-items:center; }
+.q-footer span { font-size:.82rem; color:var(--muted); }
+
+/* Score screen */
+.score-view { display:none; flex-direction:column; align-items:center; text-align:center; padding:30px 0; gap:16px; }
+.score-view.show { display:flex; animation:fadeSlide .5s ease; }
+.score-big { font-family:var(--font-h); font-weight:900; font-size:5rem; line-height:1; }
+.score-msg { font-size:1.05rem; color:var(--muted); max-width:380px; }
+
+/* ═══════════════════════════════════
+   FOOTER
+═══════════════════════════════════ */
+footer {
+  background:rgba(0,0,0,.4); border-top:1px solid var(--border);
+  padding:50px 0 30px; text-align:center;
+}
+.footer-title { font-family:var(--font-h); font-weight:900; font-size:1.4rem; color:var(--yellow); margin-bottom:12px; }
+.footer-disc { font-size:.82rem; color:var(--muted); max-width:520px; margin:0 auto 24px; line-height:1.7; }
+.footer-refs { font-size:.82rem; color:var(--muted); line-height:1.9; margin-bottom:24px; max-width:720px; margin-left:auto; margin-right:auto; text-align:left; }
+.footer-refs strong { display:block; font-family:var(--font-h); color:var(--yellow); font-size:1rem; margin-bottom:12px; }
+.refs-list { list-style:none; padding:0; margin:0; }
+.refs-list li { padding-left:2.5rem; text-indent:-2.5rem; margin-bottom:12px; }
+
+
+/* ═══════════════════════════════════
+   KURZGESAGT-STYLE SVG CELL ART
+═══════════════════════════════════ */
+.dna-spin { animation: spin 18s linear infinite; transform-origin:center; }
+@keyframes spin { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+</style>
+</head>
+<body>
+
+<!-- Progress bar -->
+<div id="prog"></div>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-title">🧬 Prostate Cancer</span>
+  <ul class="nav-links">
+    <li><a href="#disease">Disease</a></li>
+    <li><a href="#anatomy">Anatomy</a></li>
+    <li><a href="#habits">Risk Habits</a></li>
+    <li><a href="#mechanism">How It Happens</a></li>
+    <li><a href="#symptoms">Symptoms</a></li>
+    <li><a href="#prevention">Prevention</a></li>
+    <li><a href="#quiz">Quiz</a></li>
+  </ul>
+</nav>
+
+<!-- ════════════════════════════════
+     HERO
+════════════════════════════════ -->
+<section id="hero">
+  <canvas id="cell-canvas"></canvas>
+  <div class="hero-overlay"></div>
+  <div class="hero-orbit one" aria-hidden="true"></div>
+  <div class="hero-orbit two" aria-hidden="true"></div>
+  <div class="hero-content">
+    <div class="hero-badge"><span class="dot"></span> A guide to prostate health</div>
+    <h1 class="hero-title">
+      Prostate Cancer:
+      <span class="line2">When Your Cells Turn Against You</span>
+    </h1>
+    <p class="hero-sub">A clear, student-friendly guide to the prostate, cancer, healthy habits, warning signs, and prevention.</p>
+    <div class="hero-byline">Kynan, Nicholas, Winston, Oliver <span>· 9H</span></div>
+    <div class="hero-outcome">
+      <div class="ol">🎯 What you will learn</div>
+      <p>Learn what the prostate does, how prostate cancer starts, which habits affect risk, and which warning signs and prevention steps matter.</p>
+    </div>
+    <div class="hero-cta">
+      <a href="#disease" class="btn primary">Start Learning ↓</a>
+      <a href="#quiz" class="btn ghost">Take the Quiz →</a>
+    </div>
+  </div>
+  <div class="scroll-hint">↓ scroll</div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-track">
+    <span class="ticker-item"><span></span>Prostate cancer is the 2nd most common cancer in males worldwide</span>
+    <span class="ticker-item"><span></span>Over 1.4 million new cases diagnosed every year</span>
+    <span class="ticker-item"><span></span>The prostate gland is about the size of a walnut</span>
+    <span class="ticker-item"><span></span>Diet & lifestyle habits in your teens shape long-term cancer risk</span>
+    <span class="ticker-item"><span></span>Early detection leads to a &gt;99% 5-year survival rate</span>
+    <span class="ticker-item"><span></span>Catching it early gives doctors many more ways to treat it</span>
+    <span class="ticker-item"><span></span>Prostate cancer is the 2nd most common cancer in males worldwide</span>
+    <span class="ticker-item"><span></span>Over 1.4 million new cases diagnosed every year</span>
+    <span class="ticker-item"><span></span>The prostate gland is about the size of a walnut</span>
+    <span class="ticker-item"><span></span>Diet & lifestyle habits in your teens shape long-term cancer risk</span>
+    <span class="ticker-item"><span></span>Early detection leads to a &gt;99% 5-year survival rate</span>
+    <span class="ticker-item"><span></span>Catching it early gives doctors many more ways to treat it</span>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     SECTION 1 — THE DISEASE
+════════════════════════════════ -->
+<section id="disease">
+  <div class="container">
+    <div class="two-col">
+      <div>
+        <span class="sec-label o reveal">The Disease</span>
+        <h2 class="sec-title reveal d1">What Is <span style="color:var(--orange)">Prostate Cancer</span>?</h2>
+        <p class="sec-sub reveal d2">Prostate cancer usually begins when the DNA inside prostate cells changes, or <strong>mutates</strong>. The cells stop following the body’s normal instructions for growth.</p>
+        <p style="color:var(--muted);font-size:.95rem;line-height:1.75;margin-bottom:20px;" class="reveal d3">
+          Healthy cells use <strong>cell-cycle checkpoints</strong> to control when they divide. Cancer cells can ignore these checkpoints and keep multiplying. They may form a <em>malignant tumour</em> and, in advanced cases, spread to other parts of the body. This spread is called <strong>metastasis</strong>.
+        </p>
+        <p style="color:var(--muted);font-size:.95rem;line-height:1.75;margin-bottom:28px;" class="reveal d3">
+          Prostate cancer is most common in men over 50. Healthy habits during the teenage years—such as eating well, moving regularly, and avoiding smoking—can support long-term health.
+        </p>
+        <div class="stat-chips reveal d4">
+          <div class="chip">
+            <span class="chip-num">#2</span>
+            <span class="chip-label">Most common cancer in males worldwide</span>
+          </div>
+          <div class="chip">
+            <span class="chip-num">1.4M+</span>
+            <span class="chip-label">New cases diagnosed per year</span>
+          </div>
+          <div class="chip">
+            <span class="chip-num">&gt;99%</span>
+            <span class="chip-label">5-year survival if caught early</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Kurzgesagt-style SVG cell art -->
+      <div class="cell-illustration reveal d2">
+        <div class="cell-svg-wrap">
+          <svg viewBox="0 0 340 340" width="340" height="340" xmlns="http://www.w3.org/2000/svg">
+            <!-- Glow background -->
+            <defs>
+              <radialGradient id="healthyGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#06D6A0" stop-opacity="0.18"/>
+                <stop offset="100%" stop-color="#06D6A0" stop-opacity="0"/>
+              </radialGradient>
+              <radialGradient id="cancerGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#EF233C" stop-opacity="0.22"/>
+                <stop offset="100%" stop-color="#EF233C" stop-opacity="0"/>
+              </radialGradient>
+              <radialGradient id="hCellFill" cx="35%" cy="35%" r="65%">
+                <stop offset="0%" stop-color="#3ffcc8" stop-opacity=".7"/>
+                <stop offset="100%" stop-color="#06D6A0" stop-opacity=".45"/>
+              </radialGradient>
+              <radialGradient id="cCellFill" cx="35%" cy="35%" r="65%">
+                <stop offset="0%" stop-color="#ff5577" stop-opacity=".75"/>
+                <stop offset="100%" stop-color="#EF233C" stop-opacity=".45"/>
+              </radialGradient>
+              <filter id="glow-t">
+                <feGaussianBlur stdDeviation="5" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+              <filter id="glow-r">
+                <feGaussianBlur stdDeviation="6" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+
+            <!-- Label: NORMAL -->
+            <text x="78" y="24" font-family="Nunito,sans-serif" font-weight="800" font-size="11" fill="#06D6A0" text-anchor="middle" opacity=".9">NORMAL CELL</text>
+
+            <!-- Healthy cell left -->
+            <circle cx="78" cy="115" r="64" fill="url(#healthyGlow)"/>
+            <circle cx="78" cy="115" r="52" fill="url(#hCellFill)" filter="url(#glow-t)"/>
+            <circle cx="78" cy="115" r="52" fill="none" stroke="#06D6A0" stroke-width="2" opacity=".5"/>
+            <!-- Nucleus -->
+            <circle cx="72" cy="108" r="20" fill="#0a9c74" opacity=".8"/>
+            <circle cx="72" cy="108" r="20" fill="none" stroke="#3ffcc8" stroke-width="1.5" opacity=".6"/>
+            <!-- Organelles -->
+            <ellipse cx="100" cy="128" rx="9" ry="5" fill="#06D6A0" opacity=".35" transform="rotate(-25 100 128)"/>
+            <ellipse cx="58" cy="130" rx="7" ry="4" fill="#06D6A0" opacity=".28" transform="rotate(15 58 130)"/>
+            <circle cx="90" cy="95" r="5" fill="#06D6A0" opacity=".3"/>
+            <!-- Smiley nucleus detail -->
+            <circle cx="68" cy="105" r="2" fill="#3ffcc8"/>
+            <circle cx="78" cy="105" r="2" fill="#3ffcc8"/>
+            <path d="M66 113 Q72 118 80 113" stroke="#3ffcc8" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+
+            <!-- DNA helix between cells -->
+            <g class="dna-spin" style="transform-origin:170px 155px">
+              <text x="170" y="70" font-size="28" text-anchor="middle" opacity=".6">🧬</text>
+            </g>
+            <text x="170" y="148" font-family="Nunito,sans-serif" font-weight="800" font-size="10" fill="#FFD166" text-anchor="middle" opacity=".8">DNA</text>
+            <text x="170" y="162" font-family="Nunito,sans-serif" font-weight="800" font-size="10" fill="#FFD166" text-anchor="middle" opacity=".8">MUTATION</text>
+            <!-- Lightning bolt (mutation) -->
+            <text x="170" y="186" font-size="22" text-anchor="middle" opacity=".9">⚡</text>
+
+            <!-- Arrow left to right -->
+            <line x1="138" y1="115" x2="200" y2="115" stroke="#FFD166" stroke-width="2" stroke-dasharray="5,4" opacity=".6"/>
+            <polygon points="200,110 210,115 200,120" fill="#FFD166" opacity=".6"/>
+
+            <!-- Cancer cell right -->
+            <circle cx="262" cy="115" r="64" fill="url(#cancerGlow)"/>
+            <!-- Spiky cancer cell -->
+            <polygon points="
+              262,58 270,78 290,68 280,88 306,88 288,103
+              310,115 288,127 306,142 280,142 290,162
+              270,152 262,172 254,152 234,162 244,142
+              218,142 236,127 214,115 236,103 218,88
+              244,88 234,68 254,78"
+              fill="url(#cCellFill)" filter="url(#glow-r)" opacity=".85"/>
+            <polygon points="
+              262,58 270,78 290,68 280,88 306,88 288,103
+              310,115 288,127 306,142 280,142 290,162
+              270,152 262,172 254,152 234,162 244,142
+              218,142 236,127 214,115 236,103 218,88
+              244,88 234,68 254,78"
+              fill="none" stroke="#EF233C" stroke-width="2" opacity=".6"/>
+            <!-- Large nucleus (cancer has oversized nucleus) -->
+            <ellipse cx="258" cy="112" rx="26" ry="22" fill="#a80020" opacity=".8"/>
+            <ellipse cx="258" cy="112" rx="26" ry="22" fill="none" stroke="#ff5577" stroke-width="1.5" opacity=".6"/>
+            <!-- DNA strands scattered -->
+            <circle cx="280" cy="100" r="4" fill="#ff5577" opacity=".4"/>
+            <circle cx="245" cy="130" r="5" fill="#ff5577" opacity=".35"/>
+            <circle cx="275" cy="135" r="3" fill="#ff5577" opacity=".4"/>
+            <text x="262" y="24" font-family="Nunito,sans-serif" font-weight="800" font-size="11" fill="#EF233C" text-anchor="middle" opacity=".9">CANCER CELL</text>
+
+            <!-- Labels bottom -->
+            <text x="78" y="200" font-family="Nunito,sans-serif" font-weight="700" font-size="10" fill="#06D6A0" text-anchor="middle" opacity=".7">Controlled division</text>
+            <text x="78" y="213" font-family="Nunito,sans-serif" font-weight="700" font-size="10" fill="#06D6A0" text-anchor="middle" opacity=".7">Normal cell cycle</text>
+            <text x="262" y="200" font-family="Nunito,sans-serif" font-weight="700" font-size="10" fill="#EF233C" text-anchor="middle" opacity=".7">Uncontrolled growth</text>
+            <text x="262" y="213" font-family="Nunito,sans-serif" font-weight="700" font-size="10" fill="#EF233C" text-anchor="middle" opacity=".7">Malignant tumour</text>
+
+            <!-- Bottom caption -->
+            <text x="170" y="248" font-family="Nunito,sans-serif" font-weight="800" font-size="11.5" fill="#FFD166" text-anchor="middle" opacity=".85">Fig. 1 — Normal vs. Cancerous Prostate Cell</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════
+     SECTION 2 — ANATOMY (Interactive)
+════════════════════════════════ -->
+<section id="anatomy">
+  <div class="container">
+    <span class="sec-label t reveal">The Affected Organ</span>
+    <h2 class="sec-title reveal d1">The <span style="color:var(--teal)">Prostate Gland</span> &amp; Surrounding Anatomy</h2>
+    <p class="sec-sub reveal d2">Click on the glowing hotspots on the diagram to explore each organ in detail.</p>
+
+    <div class="anatomy-wrapper">
+      <!-- Left: image with hotspots -->
+      <div class="reveal">
+        <div class="anatomy-img-box" id="anatomy-img-box">
+          <img src="ChatGPT Image Sep 6, 2026, 03_31_10 PM.png" alt="Prostate anatomy diagram showing bladder, prostate gland, seminal vesicle, and urethra" id="anatomy-img" draggable="false"/>
+          <div class="hotspot-layer" id="hotspot-layer">
+            <!-- Hotspots placed as % of image dimensions -->
+            <!-- Bladder: roughly top-center -->
+            <button class="hotspot" style="left:43%;top:20%;" data-organ="bladder" title="Bladder" aria-label="Bladder hotspot">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></svg>
+            </button>
+            <!-- Prostate: middle -->
+            <button class="hotspot" style="left:39%;top:52%;" data-organ="prostate" title="Prostate Gland" aria-label="Prostate Gland hotspot">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></svg>
+            </button>
+            <!-- Seminal Vesicle: lower left -->
+            <button class="hotspot" style="left:22%;top:63%;" data-organ="seminal" title="Seminal Vesicle" aria-label="Seminal Vesicle hotspot">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></svg>
+            </button>
+            <!-- Urethra: bottom -->
+            <button class="hotspot" style="left:42%;top:83%;" data-organ="urethra" title="Urethra" aria-label="Urethra hotspot">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: detail panel -->
+      <div class="reveal d2">
+        <div class="organ-panel" id="organ-panel">
+          <!-- Default placeholder -->
+          <div class="placeholder" id="organ-placeholder">
+            <span class="big">👆</span>
+            <span>Click a glowing dot on<br/>the diagram to explore</span>
+          </div>
+
+          <!-- Organ details (hidden by default) -->
+          <div class="organ-detail" id="od-bladder">
+            <span class="organ-icon">🫁</span>
+            <span class="organ-label">Urinary System</span>
+            <h3 style="color:var(--blue)">Urinary Bladder (Vesica Urinaria)</h3>
+            <p>The <strong>urinary bladder</strong> is a stretchy, muscular organ that stores urine made by the kidneys. Two tubes called ureters carry urine into it.</p>
+            <div class="cancer-link">
+              <strong>🔗 Link to prostate cancer:</strong> A growing tumour can press on the bladder neck and urethra. This may make a person urinate more often or feel that the bladder has not emptied fully.
+            </div>
+          </div>
+
+          <div class="organ-detail" id="od-prostate">
+            <span class="organ-icon">🟠</span>
+            <span class="organ-label">Primary Affected Organ</span>
+            <h3 style="color:var(--orange)">Prostate Gland (Glandula Prostatica)</h3>
+            <p>The <strong>prostate gland</strong> is about the size of a walnut. It sits below the bladder and surrounds part of the urethra. It makes <strong>prostatic fluid</strong>, which protects and supports sperm and forms part of semen.</p>
+            <p>It has three main areas. Most prostate cancers begin in the outer area, called the <strong>peripheral zone</strong>.</p>
+            <div class="cancer-link">
+              <strong>🔗 How cancer starts:</strong> A DNA mutation can damage genes that normally control cell growth. The changed cells may then multiply too quickly and form a tumour.
+            </div>
+          </div>
+
+          <div class="organ-detail" id="od-seminal">
+            <span class="organ-icon">💜</span>
+            <span class="organ-label">Reproductive System</span>
+            <h3 style="color:var(--purple)">Seminal Vesicles (Glandulae Vesiculosae)</h3>
+            <p>The <strong>seminal vesicles</strong> are two small glands behind the bladder. They make much of the fluid in semen, including fructose that gives sperm energy.</p>
+            <div class="cancer-link">
+              <strong>🔗 Link to prostate cancer:</strong> In advanced cases, cancer cells can grow from the prostate into the nearby seminal vesicles. Doctors call this local spread.
+            </div>
+          </div>
+
+          <div class="organ-detail" id="od-urethra">
+            <span class="organ-icon">🔵</span>
+            <span class="organ-label">Urogenital System</span>
+            <h3 style="color:var(--blue)">Urethra (Urethra Masculina)</h3>
+            <p>The <strong>urethra</strong> is the tube that carries urine out of the body. In males, it also carries semen. Its first section passes through the prostate.</p>
+            <div class="cancer-link">
+              <strong>🔗 Link to prostate cancer:</strong> A tumour can squeeze the urethra. This may cause a weak urine stream, trouble starting, waking at night to urinate, or incomplete emptying.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════
+     SECTION 3 — RISK HABITS
+════════════════════════════════ -->
+<section id="habits">
+  <div class="container">
+    <span class="sec-label o reveal">Teenage Risk Factors</span>
+    <h2 class="sec-title reveal d1">Habits That <span style="color:var(--orange)">Raise Your Risk</span></h2>
+    <p class="sec-sub reveal d2">Everyday habits can affect health over time. These examples show how diet, activity, body weight, smoking, and alcohol may change cancer risk.</p>
+
+    <div class="habits-grid">
+      <article class="habit-card reveal d1">
+        <div class="habit-top">
+          <span class="habit-emoji">🍔</span>
+          <div>
+            <div class="habit-name">High-Fat &amp; Processed Diet</div>
+            <div class="habit-tag">Diet / Nutrition</div>
+          </div>
+        </div>
+        <p class="habit-body">
+          Eating lots of foods high in <strong>saturated fat</strong>, such as fast food and processed meat, may raise <strong>IGF-1</strong>, a hormone linked to cell growth. Too much growth signalling may help damaged cells survive and multiply.
+        </p>
+        <div class="risk-bar-wrap">
+          <div class="risk-bar"><div class="risk-bar-fill" style="width:82%"></div></div>
+          <span class="risk-label">HIGH</span>
+        </div>
+      </article>
+
+      <article class="habit-card reveal d2">
+        <div class="habit-top">
+          <span class="habit-emoji">🎮</span>
+          <div>
+            <div class="habit-name">Sedentary Lifestyle</div>
+            <div class="habit-tag">Physical Activity</div>
+          </div>
+        </div>
+        <p class="habit-body">
+          Sitting for long periods and rarely exercising can increase <strong>chronic inflammation</strong>. Over time, inflammation may damage cells. Regular movement supports the immune system and helps the body control inflammation.
+        </p>
+        <div class="risk-bar-wrap">
+          <div class="risk-bar"><div class="risk-bar-fill" style="width:65%"></div></div>
+          <span class="risk-label">MOD–HIGH</span>
+        </div>
+      </article>
+
+      <article class="habit-card reveal d3">
+        <div class="habit-top">
+          <span class="habit-emoji">⚖️</span>
+          <div>
+            <div class="habit-name">Obesity &amp; Excess Body Fat</div>
+            <div class="habit-tag">Body Composition</div>
+          </div>
+        </div>
+        <p class="habit-body">
+          Extra body fat can change hormone levels and increase inflammation. Hormones such as insulin and leptin may send stronger growth signals to prostate cells, which can raise long-term risk.
+        </p>
+        <div class="risk-bar-wrap">
+          <div class="risk-bar"><div class="risk-bar-fill" style="width:78%"></div></div>
+          <span class="risk-label">HIGH</span>
+        </div>
+      </article>
+
+      <article class="habit-card reveal d4">
+        <div class="habit-top">
+          <span class="habit-emoji">🚬</span>
+          <div>
+            <div class="habit-name">Smoking &amp; Alcohol</div>
+            <div class="habit-tag">Substance Use</div>
+          </div>
+        </div>
+        <p class="habit-body">
+          Tobacco smoke contains <strong>carcinogens</strong>, which are chemicals that can damage DNA. Alcohol is broken down into acetaldehyde, another harmful chemical. Avoiding both protects cells from extra damage.
+        </p>
+        <div class="risk-bar-wrap">
+          <div class="risk-bar"><div class="risk-bar-fill" style="width:95%"></div></div>
+          <span class="risk-label">VERY HIGH</span>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════
+     SECTION 4 — MECHANISM
+════════════════════════════════ -->
+<section id="mechanism">
+  <div class="container">
+    <span class="sec-label p reveal">Biology of the Disease</span>
+    <h2 class="sec-title reveal d1">How Your Habits Lead to <span style="color:var(--purple)">Cancer</span></h2>
+    <p class="sec-sub reveal d2">This simple pathway shows how repeated cell damage can sometimes lead to cancer over many years.</p>
+
+    <!-- Step flow -->
+    <div class="mech-steps reveal d2">
+      <div class="mech-step">
+        <div class="mech-num c1">1</div>
+        <h4>Harmful Habit</h4>
+        <p>Unhealthy habits may expose the body to carcinogens, inflammation, or unbalanced hormones.</p>
+      </div>
+      <div class="mech-step">
+        <div class="mech-num c2">2</div>
+        <h4>Oxidative Stress &amp; Inflammation</h4>
+        <p>Inflammation and reactive oxygen species (ROS) can damage DNA in prostate cells.</p>
+      </div>
+      <div class="mech-step">
+        <div class="mech-num c3">3</div>
+        <h4>Oncogene Activation</h4>
+        <p>Mutations may switch on growth genes and switch off tumour-suppressor genes that normally act like brakes.</p>
+      </div>
+      <div class="mech-step">
+        <div class="mech-num c4">4</div>
+        <h4>Uncontrolled Proliferation</h4>
+        <p>Damaged cells can ignore cell-cycle checkpoints, keep dividing, and form a tumour.</p>
+      </div>
+      <div class="mech-step">
+        <div class="mech-num c5">5</div>
+        <h4>Metastasis</h4>
+        <p>Cancer cells may enter blood or lymph vessels and spread to places such as bones or lymph nodes.</p>
+      </div>
+    </div>
+
+    <!-- Mechanism cards -->
+    <div class="mech-cards">
+      <div class="mech-card reveal d1">
+        <div class="mi">🔬</div>
+        <h4>IGF-1 Signalling Pathway</h4>
+        <p><strong>IGF-1</strong> is a hormone that tells cells to grow. Constantly high levels may give damaged prostate cells too many growth signals and make it harder for them to complete <strong>apoptosis</strong>, or planned cell death.</p>
+      </div>
+      <div class="mech-card reveal d2">
+        <div class="mi">⚗️</div>
+        <h4>Androgenic Stimulation (DHT)</h4>
+        <p>The prostate responds to male hormones called <strong>androgens</strong>. One of them, DHT, attaches to receptors in prostate cells and gives growth instructions. Too much signalling can support abnormal growth.</p>
+      </div>
+      <div class="mech-card reveal d3">
+        <div class="mi">🧬</div>
+        <h4>Epigenetic Silencing</h4>
+        <p><strong>Epigenetic changes</strong> are chemical tags that affect how genes work without changing the DNA code. Some tags can silence tumour-suppressor genes, removing part of the cell’s safety system.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════
+     SECTION 5 — SYMPTOMS
+════════════════════════════════ -->
+<section id="symptoms">
+  <div class="container">
+    <span class="sec-label r reveal">Warning Signs</span>
+    <h2 class="sec-title reveal d1">Recognising the <span style="color:var(--red)">Symptoms</span></h2>
+    <p class="sec-sub reveal d2">Early prostate cancer is often <strong>asymptomatic</strong>, meaning it causes no clear symptoms. Signs may appear as a tumour grows and presses on nearby organs.</p>
+
+    <div class="sym-grid">
+      <article class="sym-card reveal d1">
+        <div class="sym-icon">💧</div>
+        <div>
+          <h4>Urinary Dysfunction</h4>
+          <p>Needing to urinate often or urgently, waking at night to go, or having a weak stream. These can happen when the prostate presses on the urethra.</p>
+        </div>
+      </article>
+      <article class="sym-card reveal d2">
+        <div class="sym-icon">⚡</div>
+        <div>
+          <h4>Pelvic / Lumbar Pain</h4>
+          <p>Ongoing pain in the pelvis, hips, or lower back can have many causes. In advanced prostate cancer, it may be linked to <strong>metastasis</strong>, or cancer spreading to bone.</p>
+        </div>
+      </article>
+      <article class="sym-card reveal d3">
+        <div class="sym-icon">🩸</div>
+        <div>
+          <h4>Haematuria / Haematospermia</h4>
+          <p>Blood in urine is called <em>haematuria</em>; blood in semen is called <em>haematospermia</em>. Either sign should be checked by a doctor.</p>
+        </div>
+      </article>
+      <article class="sym-card reveal d4">
+        <div class="sym-icon">🔴</div>
+        <div>
+          <h4>Erectile Dysfunction</h4>
+          <p>Difficulty getting or keeping an erection can happen if a tumour affects nerves and blood flow near the prostate.</p>
+        </div>
+      </article>
+      <article class="sym-card reveal d1">
+        <div class="sym-icon">😴</div>
+        <div>
+          <h4>Unexplained Fatigue &amp; Weight Loss</h4>
+          <p>Advanced cancer can change how the body uses energy. This may cause unusual tiredness, loss of appetite, muscle loss, or weight loss.</p>
+        </div>
+      </article>
+      <article class="sym-card reveal d2">
+        <div class="sym-icon">🚿</div>
+        <div>
+          <h4>Decreased Urinary Stream</h4>
+          <p>A weaker urine flow, trouble starting, straining, or feeling that the bladder is still full may be signs of <strong>urethral obstruction</strong>.</p>
+        </div>
+      </article>
+    </div>
+
+    <div class="art-wrap reveal">
+      <img class="art-3d tilt-3d" src="ChatGPT_Image_Sep_7__2026__10_04_47_AM-removebg-preview.png" alt="Illustration of immune cells meeting spiky cancer cells" loading="lazy" />
+      <p class="art-cap">Immune cells (blue) meeting cancer cells (red and orange). Symptoms often show up only after a tumour has been growing for a while, so any change that lasts is worth telling an adult or a doctor about.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════════════════════════════
+     SECTION 6 — PREVENTION
+════════════════════════════════ -->
+<section id="prevention">
+  <div class="container">
+    <span class="sec-label t reveal">What You Can Do Now</span>
+    <h2 class="sec-title reveal d1">Prevention Starts <span style="color:var(--teal)">Today</span></h2>
+    <p class="sec-sub reveal d2">No habit can guarantee cancer prevention, but these healthy choices support the body and may lower long-term risk.</p>
+
+    <div class="prev-grid">
+      <article class="prev-card reveal d1">
+        <div class="prev-num">01</div>
+        <div class="prev-emoji">🍅</div>
+        <h4>Put Colour On Your Plate</h4>
+        <p>Real example: swap one packet of crisps for a bowl of watermelon, or ask for extra tomato sauce on your pasta. Tomatoes and watermelon carry <strong>lycopene</strong>, an antioxidant that helps protect cells from damage.</p>
+      </article>
+      <article class="prev-card reveal d2">
+        <div class="prev-num">02</div>
+        <div class="prev-emoji">🥦</div>
+        <h4>Eat Greens Twice A Week</h4>
+        <p>Real example: add broccoli or cauliflower to a stir-fry, or grab the vegetable side at the canteen instead of fried food. These plants contain compounds that help cells repair their DNA.</p>
+      </article>
+      <article class="prev-card reveal d3">
+        <div class="prev-num">03</div>
+        <div class="prev-emoji">🚴</div>
+        <h4>Move About An Hour A Day</h4>
+        <p>Real example: cycle or walk to school, play football at break, or do a 20-minute workout video after homework. Regular movement keeps <strong>insulin</strong> steady and lowers inflammation.</p>
+      </article>
+      <article class="prev-card reveal d1">
+        <div class="prev-num">04</div>
+        <div class="prev-emoji">🥤</div>
+        <h4>Cut The Sugary Drinks</h4>
+        <p>Real example: make water your default bottle at school and keep fizzy drinks for weekends. Fewer sugar spikes means less extra body fat, and body fat affects hormone levels.</p>
+      </article>
+      <article class="prev-card reveal d2">
+        <div class="prev-num">05</div>
+        <div class="prev-emoji">🚭</div>
+        <h4>Never Start Smoking Or Vaping</h4>
+        <p>Real example: plan one sentence you can actually say — "no thanks, I'm training." Smoke and vape aerosol carry <strong>carcinogens</strong>, chemicals that damage DNA inside cells.</p>
+      </article>
+      <article class="prev-card reveal d3">
+        <div class="prev-num">06</div>
+        <div class="prev-emoji">😴</div>
+        <h4>Sleep And Talk About Health</h4>
+        <p>Real example: phone out of the bedroom for 8 hours of sleep, and tell your family what you learned here so older male relatives book a normal check-up with their doctor.</p>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════
+     SECTION 7 — QUIZ
+════════════════════════════════ -->
+<section id="quiz">
+  <div class="container">
+    <span class="sec-label y reveal">Knowledge Check</span>
+    <h2 class="sec-title reveal d1">Test Your <span style="color:var(--yellow)">Understanding</span></h2>
+    <p class="sec-sub reveal d2" style="margin:0 auto 36px;text-align:center;">5 questions to check what you've learned. Try to get them all right!</p>
+
+    <div class="quiz-box reveal d2">
+      <div class="qprog-bar"><div class="qprog-fill" id="qfill" style="width:0%"></div></div>
+
+      <!-- Question view -->
+      <div id="qview">
+        <div class="q-label" id="qlabel">Question 1 of 5</div>
+        <div class="q-text" id="qtext"></div>
+        <div class="q-options" id="qopts" role="group" aria-label="Answer options"></div>
+        <div class="q-fb" id="qfb" role="alert" aria-live="assertive"></div>
+        <div class="q-footer">
+          <span id="qhint">Select an answer above</span>
+          <button class="btn primary" id="qnext" disabled>Next →</button>
+        </div>
+      </div>
+
+      <!-- Score view -->
+      <div class="score-view" id="qscore">
+        <div class="score-big" id="scorebig"></div>
+        <div class="score-msg" id="scoremsg"></div>
+        <button class="btn primary" id="qretry">🔄 Try Again</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════
+     FOOTER
+════════════════════════════════ -->
+<footer>
+  <div class="container">
+    <div class="footer-title">🧬 Prostate Cancer: When Your Cells Turn Against You</div>
+    
+    <div class="footer-refs">
+      <strong>References</strong>
+      <ul class="refs-list">
+        <li>Campbell, N. A., &amp; Reece, J. B. (2002). <em>Biology</em> (p. 615). Benjamin Cummings.</li>
+        <li>John Hopkins Medicine. (2023). <em>Prostate cancer: Prevention</em>. In www.hopkinsmedicine.org. https://www.hopkinsmedicine.org/health/conditions-and-diseases/prostate-cancer/prostate-cancer-prevention</li>
+        <li>Mader, S. S., &amp; Windelspecht, M. (2012). <em>Biology</em> (p. 924). McGraw-Hill Higher Education.</li>
+        <li>NHS. (2021). <em>Prostate cancer</em>. In NHS. https://www.nhs.uk/conditions/prostate-cancer/</li>
+        <li>Pickering, R. (2014). <em>Complete science for Cambridge IGCSE®: Complete biology for Cambridge IGCSE® student book</em> (3rd ed., p. 324). Oxford University Press.</li>
+      </ul>
+    </div>
+
+  </div>
+</footer>
+
+<!-- ════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════ -->
+<script>
+/* ── Progress Bar ── */
+window.addEventListener('scroll', () => {
+  const d = document.documentElement;
+  const pct = d.scrollTop / (d.scrollHeight - d.clientHeight) * 100;
+  document.getElementById('prog').style.width = pct + '%';
+}, { passive: true });
+
+/* ── Scroll Reveal ── */
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); observer.unobserve(e.target); } });
+}, { threshold: 0.10, rootMargin: '0px 0px -30px 0px' });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+/* ── Cell Canvas (Kurzgesagt biological cells) ── */
+(function() {
+  const canvas = document.getElementById('cell-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, cells = [], raf;
+
+  function resize() {
+    W = canvas.width  = canvas.parentElement.offsetWidth;
+    H = canvas.height = canvas.parentElement.offsetHeight;
+  }
+
+  class Cell {
+    constructor() { this.init(true); }
+    init(firstLoad) {
+      this.x  = Math.random() * W;
+      this.y  = firstLoad ? Math.random() * H : H + 60;
+      this.r  = 10 + Math.random() * 22;
+      this.br = this.r;
+      this.ps = 0.4 + Math.random() * 0.8; // pulse speed
+      this.pp = Math.random() * Math.PI * 2; // pulse phase
+      this.vx = (Math.random() - .5) * .3;
+      this.vy = -(0.1 + Math.random() * 0.3);
+      this.a  = 0.10 + Math.random() * 0.22;
+      this.rot    = Math.random() * Math.PI * 2;
+      this.rotSpd = (Math.random() - .5) * .004;
+      this.type   = Math.random() < .62 ? 'healthy' : 'cancer';
+      this.nr = this.r * (this.type === 'cancer' ? .52 : .36);
+      if (this.type === 'healthy') {
+        this.hue  = 168; this.sat = 88; this.lit = 44;
+        this.nhue = 185; this.nsat = 70; this.nlit = 32;
+      } else {
+        const isRed = Math.random() > .45;
+        this.hue  = isRed ? 352 : 22; this.sat = 95; this.lit = 52;
+        this.nhue = 270; this.nsat = 60; this.nlit = 38;
+      }
+      this.spikes = this.type === 'cancer' ? 5 + Math.floor(Math.random() * 6) : 0;
+    }
+    update(t) {
+      this.x += this.vx; this.y += this.vy;
+      this.rot += this.rotSpd;
+      this.r = this.br + Math.sin(t * this.ps + this.pp) * (this.br * .07);
+      if (this.y < -80 || this.x < -80 || this.x > W + 80) this.init(false);
+    }
+    draw(t) {
+      ctx.save();
+      ctx.translate(this.x, this.y);
+      ctx.rotate(this.rot);
+      ctx.globalAlpha = this.a;
+      if (this.type === 'healthy') this.drawHealthy();
+      else this.drawCancer(t);
+      ctx.restore();
+    }
+    drawHealthy() {
+      const { r, nr, hue: h, sat: s, lit: l, nhue: nh, nsat: ns, nlit: nl } = this;
+      // glow
+      const g = ctx.createRadialGradient(0,0,r*.2,0,0,r*1.8);
+      g.addColorStop(0, `hsla(${h},${s}%,${l}%,.10)`);
+      g.addColorStop(1, `hsla(${h},${s}%,${l}%,0)`);
+      ctx.beginPath(); ctx.arc(0,0,r*1.8,0,Math.PI*2); ctx.fillStyle=g; ctx.fill();
+      // body
+      const bg = ctx.createRadialGradient(-r*.25,-r*.25,0,0,0,r);
+      bg.addColorStop(0, `hsla(${h},${s}%,${l+22}%,.65)`);
+      bg.addColorStop(1, `hsla(${h},${s}%,${l-12}%,.38)`);
+      ctx.beginPath(); ctx.arc(0,0,r,0,Math.PI*2); ctx.fillStyle=bg; ctx.fill();
+      ctx.beginPath(); ctx.arc(0,0,r,0,Math.PI*2); ctx.strokeStyle=`hsla(${h},${s}%,${l+28}%,.45)`; ctx.lineWidth=1.5; ctx.stroke();
+      // nucleus
+      const ng = ctx.createRadialGradient(-nr*.2,-nr*.2,0,0,0,nr);
+      ng.addColorStop(0, `hsla(${nh},${ns}%,${nl+18}%,.80)`);
+      ng.addColorStop(1, `hsla(${nh},${ns}%,${nl}%,.50)`);
+      ctx.beginPath(); ctx.arc(r*.08,r*.06,nr,0,Math.PI*2); ctx.fillStyle=ng; ctx.fill();
+      for(let i=0;i<3;i++){
+        const ox=Math.cos((i/3)*Math.PI*2+1.2)*r*.52, oy=Math.sin((i/3)*Math.PI*2+1.2)*r*.44;
+        ctx.beginPath(); ctx.arc(ox,oy,r*.07,0,Math.PI*2); ctx.fillStyle=`hsla(${h},${s}%,${l+28}%,.38)`; ctx.fill();
+      }
+    }
+    drawCancer(t) {
+      const { r, nr, hue: h, sat: s, lit: l, nhue: nh, nsat: ns, nlit: nl, spikes } = this;
+      const inner = r * .72, wobble = Math.sin(t * this.ps + this.pp);
+      // glow
+      const g = ctx.createRadialGradient(0,0,inner,0,0,r*2.2);
+      g.addColorStop(0, `hsla(${h},${s}%,${l}%,.12)`); g.addColorStop(1, `hsla(${h},${s}%,${l}%,0)`);
+      ctx.beginPath(); ctx.arc(0,0,r*2.2,0,Math.PI*2); ctx.fillStyle=g; ctx.fill();
+      // spiky body
+      ctx.beginPath();
+      for(let i=0;i<spikes*2;i++){
+        const ang = (i/(spikes*2))*Math.PI*2;
+        const rd  = i%2===0 ? r+wobble*2.5 : inner+wobble*1.5;
+        const px=Math.cos(ang)*rd, py=Math.sin(ang)*rd;
+        i===0 ? ctx.moveTo(px,py) : ctx.lineTo(px,py);
+      }
+      ctx.closePath();
+      const bg = ctx.createRadialGradient(-r*.2,-r*.2,0,0,0,r);
+      bg.addColorStop(0, `hsla(${h},${s}%,${l+14}%,.62)`);
+      bg.addColorStop(1, `hsla(${h},${s}%,${l-10}%,.36)`);
+      ctx.fillStyle=bg; ctx.fill();
+      ctx.strokeStyle=`hsla(${h},${s}%,${l+20}%,.42)`; ctx.lineWidth=1.2; ctx.stroke();
+      // big nucleus
+      ctx.beginPath(); ctx.ellipse(r*.05,r*.05,nr*(1+wobble*.05),nr*.85,wobble*.3,0,Math.PI*2);
+      const ng = ctx.createRadialGradient(0,0,0,0,0,nr);
+      ng.addColorStop(0, `hsla(${nh},${ns}%,${nl+18}%,.82)`);
+      ng.addColorStop(1, `hsla(${nh},${ns}%,${nl}%,.55)`);
+      ctx.fillStyle=ng; ctx.fill();
+    }
+  }
+
+  function init() {
+    resize();
+    const n = Math.min(Math.floor((W*H)/13000), 60);
+    cells = Array.from({length:n}, () => new Cell());
+  }
+
+  let t0 = 0;
+  function loop(ts) {
+    const t = ts * .001;
+    ctx.clearRect(0,0,W,H);
+    cells.forEach(c => { c.update(t); c.draw(t); });
+    raf = requestAnimationFrame(loop);
+  }
+  window.addEventListener('resize', init, { passive: true });
+  init();
+  requestAnimationFrame(loop);
+})();
+
+/* ── Anatomy Hotspots ── */
+(function() {
+  const organs = {
+    bladder: 'od-bladder',
+    prostate: 'od-prostate',
+    seminal: 'od-seminal',
+    urethra: 'od-urethra'
+  };
+  let active = null;
+
+  document.querySelectorAll('.hotspot').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const key = btn.dataset.organ;
+
+      // Toggle off if same
+      if (active === key) {
+        document.getElementById(organs[active]).classList.remove('show');
+        document.getElementById('organ-placeholder').style.display = '';
+        btn.classList.remove('active');
+        active = null;
+        return;
+      }
+
+      // Hide previous
+      if (active) {
+        document.getElementById(organs[active]).classList.remove('show');
+        document.querySelector(`.hotspot[data-organ="${active}"]`).classList.remove('active');
+      }
+
+      // Show new
+      document.getElementById('organ-placeholder').style.display = 'none';
+      document.getElementById(organs[key]).classList.add('show');
+      btn.classList.add('active');
+      active = key;
+    });
+  });
+})();
+
+/* ── Quiz ── */
+(function() {
+  const QS = [
+    {
+      q: "What is one main job of the prostate gland?",
+      opts: [
+        "To produce testosterone for muscle growth",
+        "To make fluid that forms part of semen and supports sperm",
+        "To filter waste products from the bloodstream",
+        "To store urine until urination occurs"
+      ],
+      ans: 1,
+      why: [
+        "Testosterone is made in the testes, not the prostate. The prostate reacts to testosterone, but it does not produce it.",
+        "The prostate makes prostatic fluid. This fluid mixes with sperm to form semen, and it feeds and protects the sperm cells.",
+        "Filtering waste from blood is the job of the kidneys. The prostate has no filtering role at all.",
+        "Urine is stored in the bladder. The prostate sits just below the bladder, but it does not hold urine."
+      ],
+      review: "Review the “Prostate Gland & Surrounding Anatomy” section and click the bladder and prostate hotspots."
+    },
+    {
+      q: "In which part of the prostate do most prostate cancers begin?",
+      opts: [
+        "The transition zone",
+        "The central zone",
+        "The peripheral zone",
+        "The fibromuscular zone"
+      ],
+      ans: 2,
+      why: [
+        "The transition zone surrounds the urethra. It is where the prostate usually grows bigger with age, but that growth is normally not cancer.",
+        "The central zone sits around the tubes coming from the seminal vesicles. Cancer starts here only rarely.",
+        "The peripheral zone is the outer part of the gland, closest to the rectum. Most prostate cancers start here, which is why a doctor can sometimes feel a lump during an examination.",
+        "The fibromuscular zone is mostly muscle and connective tissue, so there are very few gland cells there to turn cancerous."
+      ],
+      review: "Review the “Prostate Gland & Surrounding Anatomy” section, especially the prostate hotspot."
+    },
+    {
+      q: "How might a diet high in saturated fat affect cell growth?",
+      opts: [
+        "It instantly kills prostate cells",
+        "It can raise IGF-1, giving cells stronger “keep growing” signals",
+        "It stops testosterone being made, so the immune system fails",
+        "It makes the body hold water, squashing the prostate"
+      ],
+      ans: 1,
+      why: [
+        "Saturated fat does not kill prostate cells on the spot. Its effect is slow and builds up over years.",
+        "A diet high in saturated fat can push up <strong>IGF-1</strong>, a growth hormone. When growth signals stay high, damaged cells are told to keep dividing instead of stopping.",
+        "Saturated fat does not switch off testosterone. Prostate cancer is actually linked to testosterone still being present, not missing.",
+        "Water retention is not how diet is linked to prostate cancer. The link runs through hormones and inflammation."
+      ],
+      review: "Review the “How Your Habits Lead to Cancer” section on growth signals and inflammation."
+    },
+    {
+      q: "Which urinary change can happen when an enlarged prostate presses on the urethra?",
+      opts: [
+        "Feeling extra thirsty all the time",
+        "Crying blood, because cancer reaches the tear glands",
+        "Needing to pee often, urgently, or with a weak stream",
+        "Getting back acne from hormone changes"
+      ],
+      ans: 2,
+      why: [
+        "Extra thirst is linked to conditions like diabetes, not to pressure on the urethra.",
+        "Prostate cancer does not affect the tear glands. This option is not a real symptom.",
+        "The urethra runs straight through the prostate. When the gland swells it squeezes that tube, so urine flows more slowly and the bladder never feels fully empty.",
+        "Acne comes from oil glands in the skin. It is not a warning sign of prostate problems."
+      ],
+      review: "Review the “Recognising the Symptoms” section, especially urinary frequency and weak stream."
+    },
+    {
+      q: "Which everyday choice best supports long-term prostate health?",
+      opts: [
+        "Only getting more sleep",
+        "Staying active most days and keeping a healthy body weight",
+        "Drinking lots of water to flush out carcinogens",
+        "Avoiding spicy food"
+      ],
+      ans: 1,
+      why: [
+        "Sleep does help the body repair itself, but on its own it does not do as much as being active and keeping a healthy weight.",
+        "Moving most days and keeping a healthy weight lowers inflammation and keeps insulin and hormone levels steadier, so cells get fewer harmful growth signals.",
+        "Water is important, but it cannot wash <strong>carcinogens</strong> out of cells. Damage to DNA is not fixed by drinking more.",
+        "Spicy food has no proven link to prostate cancer risk."
+      ],
+      review: "Review the “Prevention Starts Today” section for habits you can start this week."
+    }
+  ];
+
+
+  let curr = 0, score = 0, answered = false;
+
+  function render() {
+    const d = QS[curr];
+    const ltrs = ['A','B','C','D'];
+    document.getElementById('qlabel').textContent = `Question ${curr+1} of ${QS.length}`;
+    document.getElementById('qtext').textContent  = d.q;
+    document.getElementById('qfill').style.width  = `${(curr/QS.length)*100}%`;
+
+    const optsEl = document.getElementById('qopts');
+    optsEl.innerHTML = '';
+    d.opts.forEach((o,i) => {
+      const btn = document.createElement('button');
+      btn.className = 'q-opt';
+      btn.id = `qopt-${i}`;
+      btn.innerHTML = `<span class="q-letter">${ltrs[i]}</span><span>${o}</span>`;
+      btn.addEventListener('click', () => pick(i));
+      optsEl.appendChild(btn);
+    });
+
+    const fb = document.getElementById('qfb');
+    fb.className = 'q-fb'; fb.textContent = '';
+    document.getElementById('qnext').disabled = true;
+    document.getElementById('qhint').textContent = 'Select an answer above';
+    answered = false;
+  }
+
+  function pick(i) {
+    if (answered) return;
+    answered = true;
+    const d = QS[curr];
+    document.querySelectorAll('.q-opt').forEach(b => b.disabled = true);
+    document.getElementById(`qopt-${i}`).classList.add(i === d.ans ? 'correct' : 'wrong');
+    document.getElementById(`qopt-${d.ans}`).classList.add('correct');
+    const fb = document.getElementById('qfb');
+    const ltrs = ['A','B','C','D'];
+    if (i === d.ans) {
+      score++;
+      fb.className = 'q-fb ok show';
+      fb.innerHTML = `<strong>✅ Correct.</strong> ${d.why[d.ans]}<br/><span class="q-review">📖 Want to go deeper? ${d.review}</span>`;
+    } else {
+      fb.className = 'q-fb bad show';
+      fb.innerHTML = `<strong>❌ Not quite.</strong> You chose <strong>${ltrs[i]}</strong>: ${d.why[i]}<br/><br/><strong>The right answer is ${ltrs[d.ans]}.</strong> ${d.why[d.ans]}<br/><span class="q-review">📖 Where to review: ${d.review}</span>`;
+    }
+
+    document.getElementById('qnext').disabled = false;
+    document.getElementById('qhint').textContent = '';
+  }
+
+  function next() {
+    curr++;
+    if (curr < QS.length) { render(); }
+    else { showScore(); }
+  }
+
+  function showScore() {
+    document.getElementById('qview').style.display  = 'none';
+    const sv = document.getElementById('qscore');
+    sv.classList.add('show');
+    const pct = Math.round(score/QS.length*100);
+    const big = document.getElementById('scorebig');
+    big.textContent = `${score}/${QS.length}`;
+    big.style.color = pct===100 ? 'var(--teal)' : pct>=60 ? 'var(--yellow)' : 'var(--red)';
+    const msgs = [
+      pct===100 ? '🎉 Perfect score! You really know your prostate biology!' : '',
+      pct>=80&&pct<100 ? '👏 Great job! Almost perfect — review the ones you missed.' : '',
+      pct>=60&&pct<80 ? '👍 Good effort! Scroll back through the sections to fill the gaps.' : '',
+      pct<60 ? '📖 Keep studying! Re-read the sections and try again.' : ''
+    ].find(m=>m) || '';
+    document.getElementById('scoremsg').textContent = msgs;
+    document.getElementById('qfill').style.width = '100%';
+  }
+
+  function restart() {
+    curr=0; score=0;
+    document.getElementById('qview').style.display = '';
+    const sv = document.getElementById('qscore');
+    sv.classList.remove('show');
+    document.getElementById('qfill').style.width = '0%';
+    render();
+  }
+
+  document.getElementById('qnext').addEventListener('click', next);
+  document.getElementById('qretry').addEventListener('click', restart);
+  render();
+})();
+
+/* ── Nav active link on scroll ── */
+(function() {
+  const sections = document.querySelectorAll('section[id]');
+  const links = document.querySelectorAll('.nav-links a');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(a => a.style.color = '');
+        const l = document.querySelector(`.nav-links a[href="#${e.target.id}"]`);
+        if (l) l.style.color = 'var(--yellow)';
+      }
+    });
+  }, { threshold: .35 });
+  sections.forEach(s => obs.observe(s));
+})();
+</script>
+</body>
+</html>
